@@ -40,7 +40,7 @@ We use the [SLURM Experiment Management Library](https://github.com/TUM-DAML/sem
 After computing all certificates, you can use the notebooks in `plots` to recreate the figures from the paper.  
 In case you do not want to run all experiments yourself, you can just run the notebooks while keeping the flag `overwrite=False` (our results are then loaded from the respective `data` subfolders).
 
-For more details on which config files and plotting notebooks to use for recreating which figure from the paper, please consult [REPRODUCE_IMAGES.MD](./REPRODUCE_IMAGES.md) and [REPRODUCE_GRAPHS.MD](./REPRODUCE_IMAGES.md)
+For more details on which config files and plotting notebooks to use for recreating which figure from the paper, please consult [REPRODUCE_IMAGES.MD](./REPRODUCE_IMAGES.md) and [REPRODUCE_GRAPHS.MD](./REPRODUCE_GRAPHS.md)
 
 ## Cite
 Please cite our paper if you use this code in your own work:

@@ -1,0 +1,131 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing-cuda11
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 10-00:00     # max time, D-HH:MM
+    partition: gpu_all
+
+fixed:
+  experiment_name: 'certify'
+  certify_test: False
+  dataset_name: 'citeseer'
+
+  budget_a: 50
+  budget_d: 50
+  
+  batch_size: 25
+  n_samples_eval: 100_000
+  n_samples_pre_eval: 1000
+
+  clustering_type: 'metis'
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'APPNP'
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+      k_hops: 10
+      alpha: 0.15
+
+  min_m: 0.6
+  max_m: 0.6
+
+grid:
+  n_clusters: 
+    type: choice
+    options: 
+      - 5
+
+pp_min_005:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.005_pm_min_0.6
+    min_p: 0.0
+    max_p: 0.015
+
+pp_min_01:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.6
+    min_p: 0.005
+    max_p: 0.02
+
+pp_min_015:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.015_pm_min_0.6
+    min_p: 0.01
+    max_p: 0.025
+
+pp_min_02:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.02_pm_min_0.6
+    min_p: 0.015
+    max_p: 0.03
+
+pp_min_025:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.025_pm_min_0.6
+    min_p: 0.02
+    max_p: 0.035
+
+pp_min_03:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.03_pm_min_0.6
+    min_p: 0.025
+    max_p: 0.04
+
+pp_min_04:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.04_pm_min_0.6
+    min_p: 0.035
+    max_p: 0.05
+
+pp_min_045:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.045_pm_min_0.6
+    min_p: 0.04
+    max_p: 0.055
+
+pp_min_05:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.05_pm_min_0.6
+    min_p: 0.045
+    max_p: 0.06
+
+pp_min_055:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.055_pm_min_0.6
+    min_p: 0.05
+    max_p: 0.065
+
+pp_min_06:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.06_pm_min_0.6
+    min_p: 0.055
+    max_p: 0.07
+
+pp_min_065:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.065_pm_min_0.6
+    min_p: 0.06
+    max_p: 0.075
+
+pp_min_07:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.07_pm_min_0.6
+    min_p: 0.065
+    max_p: 0.08
+
+
+
+
+
+

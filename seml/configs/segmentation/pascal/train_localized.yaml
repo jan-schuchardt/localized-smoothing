@@ -1,0 +1,241 @@
+seml:
+  executable: /path/to/train.py
+  conda_environment: localized_smoothing_images
+  project_root_dir: /path/to/localized_smoothing/  # Not the localized_smoothing folder that contains the src files, but one level up
+  output_dir: /path/to/logs/slurm_out/train
+  name: train
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 8  # num cores
+    time: 2-12:00     # max time, D-HH:MM
+    #partition: gpu_large
+    #exclude: gpu[15,17,20]
+
+fixed:
+
+  seed: 0
+  save_dir: /your/path/to/localized_smoothing_results/images/train_pascal_localized
+
+  dataset:
+    dataset_name: pascal
+    data_folder: /your/path/to/data  # Path that contains "pascal_voc"
+    scaling: 0.5
+    image_interpolation_method: area
+    target_interpolation_method: nearest
+
+  model:
+    model_type: unet
+    model_params.encoder_name: resnet18
+    model_params.encoder_weights: imagenet
+
+  training_params:
+    num_epochs: 512
+    lr: 0.001
+    batch_size: 128
+    max_batch_size: 512
+    train_encoder: False
+    epochs_val: 8
+    stitch_smooth_predictions: True
+    accumulate_gradients: True
+
+  transformations:
+    ###### Image Space
+    random_brightness_params:
+      p: 0.0
+    random_contrast_params:
+      p: 0.0
+    blur_params:
+      p: 0.0
+      blur_limit: 3
+
+    ###### Geometric
+    flip_horizontally: True
+
+    shift_scale_rotate_params:
+      shift_limit: 0.0
+      scale_limit: [0, 1]
+      rotate_limit: 0
+      p: 0.5
+    ###### Padding / Cropping
+    padding_params_train:
+      border_mode: 0
+    padding_params_val:
+      border_mode: 0
+    random_cropping_params:
+      height: 160
+      width: 256
+
+train_unsmoothed:
+  fixed:
+    transformations.smoothing_params:
+      p: 1
+      localized: True
+      distribution_params:
+        std: -5
+      localized_params:
+        mask_value: 255
+        label_mask_distance: None
+        distribution_params:
+          std_min: 0.001
+          std_max: 0.001
+          grid_shape: [3, 5]
+          metric: l_0
+          interpolate_variance: False
+          mask_distance: None
+          max_std_at_boundary: False
+
+3-5-small-std-min:
+  fixed:
+    transformations.smoothing_params:
+      p: 1
+      localized: True
+      distribution_params:
+        std: -5
+      localized_params:
+        mask_value: 255
+        label_mask_distance: None
+        distribution_params:
+          grid_shape: [3, 5]
+          metric: l_0
+          interpolate_variance: False
+          mask_distance: None
+          max_std_at_boundary: False
+  grid:
+    transformations.smoothing_params.localized_params.distribution_params.std_min:
+      type: choice
+      options:
+        - 0.005
+        - 0.0075
+        - 0.01
+        - 0.025
+        - 0.05
+        - 0.06
+        - 0.07
+        - 0.08
+        - 0.09
+    transformations.smoothing_params.localized_params.distribution_params.std_max:
+      type: choice
+      options:
+        - 0.05
+        - 0.1
+        - 0.15
+        - 0.2
+        - 0.25
+        - 0.3
+        - 0.5
+        - 0.8
+
+
+3-5-for-medium-std-min:
+  fixed:
+    transformations.smoothing_params:
+      p: 1
+      localized: True
+      distribution_params:
+        std: -5
+      localized_params:
+        mask_value: 255
+        label_mask_distance: None
+        distribution_params:
+          grid_shape: [3, 5]
+          metric: l_0
+          interpolate_variance: False
+          mask_distance: None
+          max_std_at_boundary: False
+  grid:
+    transformations.smoothing_params.localized_params.distribution_params.std_min:
+      type: choice
+      options:
+        - 0.1
+        - 0.125
+        - 0.135
+        - 0.15
+    transformations.smoothing_params.localized_params.distribution_params.std_max:
+      type: choice
+      options:
+        - 0.2
+        - 0.25
+        - 0.3
+        - 0.35
+        - 0.4
+        - 0.5
+        - 0.6
+
+
+3-5-for-large-std-min:
+  fixed:
+    transformations.smoothing_params:
+      p: 1
+      localized: True
+      distribution_params:
+        std: -5
+      localized_params:
+        mask_value: 255
+        label_mask_distance: None
+        distribution_params:
+          grid_shape: [3, 5]
+          metric: l_0
+          interpolate_variance: False
+          mask_distance: None
+          max_std_at_boundary: False
+  grid:
+    transformations.smoothing_params.localized_params.distribution_params.std_min:
+      type: choice
+      options:
+        - 0.15
+        - 0.2
+        - 0.25
+        - 0.3
+    transformations.smoothing_params.localized_params.distribution_params.std_max:
+      type: choice
+      options:
+        - 0.35
+        - 0.4
+        - 0.5
+        - 0.6
+        - 0.7
+        - 0.8
+        - 0.9
+        - 1.0
+
+
+3-5-for-huge-std-min:
+  fixed:
+    transformations.smoothing_params:
+      p: 1
+      localized: True
+      distribution_params:
+        std: -5
+      localized_params:
+        mask_value: 255
+        label_mask_distance: None
+        distribution_params:
+          grid_shape: [3, 5]
+          metric: l_0
+          interpolate_variance: False
+          mask_distance: None
+          max_std_at_boundary: False
+  grid:
+    transformations.smoothing_params.localized_params.distribution_params.std_min:
+      type: choice
+      options:
+        - 0.35
+        - 0.4
+        - 0.45
+        - 0.5
+    transformations.smoothing_params.localized_params.distribution_params.std_max:
+      type: choice
+      options:
+        - 0.55
+        - 0.6
+        - 0.7
+        - 0.8
+        - 0.9
+        - 1.0
+
+
+

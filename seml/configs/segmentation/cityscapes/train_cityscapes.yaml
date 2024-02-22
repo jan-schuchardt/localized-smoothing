@@ -1,0 +1,140 @@
+seml:
+  executable: /path/to/train.py
+  conda_environment: localized_smoothing_images
+  project_root_dir: /path/to/localized_smoothing/  # Not the localized_smoothing folder that contains the src files, but one level up
+  output_dir: /path/to/logs/slurm_out/train
+  name: train
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    partition: gpu_large
+    gres: gpu:1       # num GPUs
+    mem: 64G          # memory
+    cpus-per-task: 15  # num cores
+    time: 0-14:00     # max time, D-HH:MM
+    #exclude: gpu[15,17]
+
+fixed:
+
+  seed: 0
+  save_dir: /your/path/to/localized_smoothing_results/train_cityscapes
+
+  # TODO: Make these proper nested dictionaries, unless necessary
+  # Only use dot notation when trying to manipulate single nested parameter
+
+  dataset:
+    dataset_name: cityscapes
+    data_folder: /path/to/cityscapes/  # path that contains gtFINE etc.
+    scaling: 0.5
+    image_interpolation_method: area
+    target_interpolation_method: nearest
+    train_set: train
+    val_set: val
+
+  model:
+    model_type: deeplabv3
+    model_params:
+      encoder_name: resnet18
+      encoder_weights: imagenet
+      classes: 19
+
+  training_params:
+    train_encoder: True
+    batch_size: 64
+    num_epochs: 512
+    lr: 0.001
+    epochs_val: 4
+    num_workers: 14
+
+  transformations:
+    ###### Image Space
+    random_brightness_params:
+      p: 0.0
+    random_contrast_params:
+      p: 0.0
+    blur_params:
+      p: 0.0
+      blur_limit: 3
+
+    ###### Geometric
+    flip_horizontally: True
+
+    shift_scale_rotate_params:
+      shift_limit: 0.1
+      scale_limit: [-0.5, 1]
+      rotate_limit: 0
+      p: 1
+    ###### Padding / Cropping
+    padding_params_train:
+      border_mode: 0
+    padding_params_val:
+      border_mode: 0
+    random_cropping_params:
+      height: 512
+      width: 512
+
+train_unsmoothed:
+  fixed:
+    transformations.smoothing_params:
+      p: 0
+      distribution_params:
+        std: 0.0
+
+train_smoothed:
+  fixed:
+    transformations.smoothing_params.p: 1
+  grid:
+    transformations.smoothing_params.distribution_params.std:
+      type: choice
+      options:
+        - 0.02
+        - 0.04
+        - 0.06
+        - 0.08
+        - 0.10
+        - 0.12
+        - 0.14
+        - 0.16
+        - 0.18
+        - 0.20
+        - 0.22
+        - 0.24
+        - 0.26
+        - 0.28
+        - 0.30
+        - 0.32
+        - 0.34
+        - 0.36
+        - 0.38
+        - 0.40
+        - 0.42
+        - 0.44
+        - 0.46
+        - 0.48
+        - 0.50
+        - 0.01
+        - 0.03
+        - 0.05
+        - 0.07
+        - 0.09
+        - 0.11
+        - 0.13
+        - 0.15
+        - 0.17
+        - 0.19
+        - 0.21
+        - 0.23
+        - 0.25
+        - 0.27
+        - 0.29
+        - 0.31
+        - 0.33
+        - 0.35
+        - 0.37
+        - 0.39
+        - 0.41
+        - 0.43
+        - 0.45
+        - 0.47
+        - 0.49

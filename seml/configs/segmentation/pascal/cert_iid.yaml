@@ -1,0 +1,194 @@
+seml:
+  executable: /path/to/cert.py
+  conda_environment: localized_smoothing_images
+  project_root_dir: /path/to/localized_smoothing/  # Not the localized_smoothing folder that contains the src files, but one level up
+  output_dir: /path/to/localized_smoothing/slurm_out
+  name: cert
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 1-12:00     # max time, D-HH:MM
+    #partition: gpu_large
+    #exclude: gpu18,gpu19,mdsi-gpu01,mdsi-gpu02
+fixed:
+
+  cert_dir: /your/path/to/localized_smoothing_results/images/cert_pascal_iid
+
+  dataset:
+    dataset_name: pascal
+    data_folder: /your/path/to/data  # Path that contains "pascal_voc"
+    scaling: 0.5
+    image_interpolation_method: area
+    target_interpolation_method: nearest
+
+  padding_params:
+    pad_height_divisor: 32
+    pad_width_divisor: 32
+
+  sample_params:
+    upsampling_factor_pred: 1
+    upsampling_factor_cert: 1 
+
+  distribution_params:
+    metric: l_0
+    interpolate_variance: False
+    mask_distance: None
+    max_std_at_boundary: False
+
+  certification_params:
+    n_images: 100
+    budget_min: 0
+    budget_max: 2
+    budget_steps: 81
+    n_thresholds: 1000
+    alpha: 0.01
+    eps: None
+    binary_search_depth: 16
+
+  train_loading:
+    collection: train_images_pascal
+    exp_id: None
+    load_best_iou: True
+    find_localized_distribution: False
+    restrictions:
+      model.model_type: unet
+
+
+naive_certs_smooth_training:
+  fixed:
+    certification_params.naive_certs: ['argmax_bonferroni', 'argmax_holm', 'cdf', 'center_independent', 'center_bonferroni']
+    certification_params.base_certs: []
+    distribution_params.grid_shape: [1, 1]
+    distribution_params.std_max: 1
+    train_loading.restrictions.transformations.smoothing_params.p: 1
+    train_loading.find_std_min: True
+    sample_params.batch_size: 512
+    sample_params.n_samples_pred: 12288
+    sample_params.n_samples_cert: 153600
+
+  grid:
+    distribution_params.std_min:
+      type: choice
+      options:
+        - 0.01
+        - 0.02
+        - 0.03
+        - 0.04
+        - 0.05
+        - 0.06
+        - 0.07
+        - 0.08
+        - 0.09
+        - 0.10
+        - 0.11
+        - 0.12
+        - 0.13
+        - 0.14
+        - 0.15
+        - 0.16
+        - 0.17
+        - 0.18
+        - 0.19
+        - 0.20
+        - 0.21
+        - 0.22
+        - 0.23
+        - 0.24
+        - 0.25
+        - 0.26
+        - 0.27
+        - 0.28
+        - 0.29
+        - 0.30
+        - 0.31
+        - 0.32
+        - 0.33
+        - 0.34
+        - 0.35
+        - 0.36
+        - 0.37
+        - 0.38
+        - 0.39
+        - 0.40
+        - 0.41
+        - 0.42
+        - 0.43
+        - 0.44
+        - 0.45
+        - 0.46
+        - 0.47
+        - 0.48
+        - 0.49
+        - 0.50
+
+
+naive_certs_smooth_training_few_samples:
+  fixed:
+    certification_params.naive_certs: ['argmax_bonferroni', 'argmax_holm', 'cdf', 'center_independent', 'center_bonferroni']
+    certification_params.base_certs: []
+    distribution_params.grid_shape: [1, 1]
+    distribution_params.std_max: 1
+    train_loading.restrictions.transformations.smoothing_params.p: 1
+    train_loading.find_std_min: True
+    sample_params.batch_size: 256
+    sample_params.n_samples_pred: 820
+    sample_params.n_samples_cert: 10240
+
+  grid:
+    distribution_params.std_min:
+      type: choice
+      options:
+        - 0.01
+        - 0.02
+        - 0.03
+        - 0.04
+        - 0.05
+        - 0.06
+        - 0.07
+        - 0.08
+        - 0.09
+        - 0.10
+        - 0.11
+        - 0.12
+        - 0.13
+        - 0.14
+        - 0.15
+        - 0.16
+        - 0.17
+        - 0.18
+        - 0.19
+        - 0.20
+        - 0.21
+        - 0.22
+        - 0.23
+        - 0.24
+        - 0.25
+        - 0.26
+        - 0.27
+        - 0.28
+        - 0.29
+        - 0.30
+        - 0.31
+        - 0.32
+        - 0.33
+        - 0.34
+        - 0.35
+        - 0.36
+        - 0.37
+        - 0.38
+        - 0.39
+        - 0.40
+        - 0.41
+        - 0.42
+        - 0.43
+        - 0.44
+        - 0.45
+        - 0.46
+        - 0.47
+        - 0.48
+        - 0.49
+        - 0.50

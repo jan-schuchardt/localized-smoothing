@@ -1,0 +1,68 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing-cuda11
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 10-00:00     # max time, D-HH:MM
+    partition: gpu_all
+
+fixed:
+  experiment_name: 'certify'
+  certify_test: False
+  dataset_name: 'citeseer'
+
+  budget_a: 50
+  budget_d: 50
+  
+  batch_size: 25
+  n_samples_eval: 100_000
+  n_samples_pre_eval: 1000
+
+  clustering_type: 'metis'
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'APPNP'
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+      k_hops: 10
+      alpha: 0.15
+
+  min_p: 0.01
+  max_p: 0.01
+
+grid:
+  n_clusters: 
+    type: choice
+    options:
+      - 1
+      - 3 
+      - 5
+      - 8
+      - 10
+      - 15
+      - 20
+      - 30
+      - 50
+
+pm_min_06:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.6
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.6
+    max_m:
+      type: choice
+      options:
+        - 0.95

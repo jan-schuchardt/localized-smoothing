@@ -1,0 +1,162 @@
+seml:
+  executable: /path/to/cert.py
+  conda_environment: localized_smoothing_images
+  project_root_dir: /path/to/localized_smoothing/  # Not the localized_smoothing folder that contains the src files, but one level up
+  output_dir: /path/to/localized_smoothing/slurm_out
+  name: cert
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 128G          # memory
+    cpus-per-task: 6  # num cores
+    time: 1-00:00     # max time, D-HH:MM
+    #partition: gpu_large
+    #exclude: gpu[15,17,20]
+
+fixed:
+
+  cert_dir: /your/path/to/localized_smoothing_results/images/cert_pascal_localized_training
+
+  dataset:
+    dataset_name: pascal
+    data_folder: /your/path/to/data  # Path that contains "pascal_voc"
+    scaling: 0.5
+    image_interpolation_method: area
+    target_interpolation_method: nearest
+
+  padding_params:
+    pad_height_divisor: 32
+    pad_width_divisor: 32
+
+  sample_params:
+    batch_size: 256
+    n_samples_pred: 820
+    n_samples_cert: 10240
+    upsampling_factor_pred: 1
+    upsampling_factor_cert: 1
+
+  distribution_params:
+    metric: l_0
+    interpolate_variance: False
+    mask_distance: None
+    max_std_at_boundary: False
+
+  certification_params:
+    n_images: 100
+    budget_min: 0
+    budget_max: 4
+    budget_steps: 81
+    n_thresholds: 1000
+    alpha: 0.01
+    eps: None
+    binary_search_depth: 16
+    naive_certs: ['argmax_bonferroni', 'argmax_holm']
+    base_certs: ['argmax_holm']
+
+  train_loading:
+    collection: train_images_pascal_localized
+    exp_id: None
+    load_best_iou: True
+    find_std_min: False
+    find_localized_distribution: True
+    restrictions:
+      model.model_type: unet
+      training_params.accumulate_gradients: True
+
+
+3-5-small-std-min:
+  fixed:
+    distribution_params.grid_shape: [3, 5]
+  grid:
+    distribution_params.std_min:
+      type: choice
+      options:
+        - 0.005
+        - 0.0075
+        - 0.01
+        - 0.025
+        - 0.05
+        - 0.06
+        - 0.07
+        - 0.08
+        - 0.09
+    distribution_params.std_max:
+      type: choice
+      options:
+        - 0.05
+        - 0.1
+        - 0.15
+        - 0.2
+        - 0.25
+        - 0.3
+        - 0.5
+        - 0.8
+
+3-5-for-medium-std-min:
+  fixed:
+    distribution_params.grid_shape: [3, 5]
+  grid:
+    distribution_params.std_min:
+      type: choice
+      options:
+        - 0.1
+        - 0.125
+        - 0.135
+        - 0.15
+    distribution_params.std_max:
+      type: choice
+      options:
+        - 0.2
+        - 0.25
+        - 0.3
+        - 0.35
+        - 0.4
+        - 0.5
+        - 0.6
+
+
+3-5-for-large-std-min:
+  fixed:
+    distribution_params.grid_shape: [3, 5]
+  grid:
+    distribution_params.std_min:
+      type: choice
+      options:
+        - 0.15
+        - 0.2
+        - 0.25
+        - 0.3
+    distribution_params.std_max:
+      type: choice
+      options:
+        - 0.35
+        - 0.4
+        - 0.5
+        - 0.6
+        - 0.7
+        - 0.8
+        - 0.9
+        - 1.0
+
+3-5-for-huge-std-min:
+  fixed: 
+    distribution_params.grid_shape: [3, 5]
+  grid: 
+    distribution_params.std_min:
+      type: choice
+      options:
+        - 0.35
+        - 0.4
+        - 0.45
+        - 0.5
+    distribution_params.std_max:
+      type: choice
+      options:
+        - 0.55
+        - 0.6
+        - 0.7
+        - 0.8
+        - 0.9
+        - 1.0

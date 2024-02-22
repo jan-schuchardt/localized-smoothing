@@ -1,0 +1,144 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing-cuda11
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 2-00:00     # max time, D-HH:MM
+    partition: gpu_all
+
+fixed:
+  experiment_name: 'certify'
+  certify_test: False
+  dataset_name: 'citeseer'
+
+  budget_a: 50
+  budget_d: 50
+  
+  n_clusters: 5
+  batch_size: 25
+  n_samples_eval: 100_000
+  n_samples_pre_eval: 1000
+
+  clustering_type: 'metis'
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'APPNP'
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+      k_hops: 10
+      alpha: 0.15
+
+  min_p: 0.01
+  max_p: 0.01
+
+pm_min_04:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.4
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.3
+        - 0.35
+        - 0.4
+    max_m:
+      type: choice
+      options:
+        - 0.7
+        - 0.8
+        - 0.9
+        - 0.95
+
+pm_min_05:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.5
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.4
+        - 0.45
+        - 0.5
+    max_m:
+      type: choice
+      options:
+        - 0.7
+        - 0.8
+        - 0.9
+        - 0.95
+
+pm_min_06:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.6
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.5
+        - 0.55
+        - 0.6
+    max_m:
+      type: choice
+      options:
+        - 0.7
+        - 0.8
+        - 0.9
+        - 0.95
+
+pm_min_07:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.7
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.6
+        - 0.65
+        - 0.7
+    max_m:
+      type: choice
+      options:
+        - 0.8
+        - 0.9
+        - 0.95
+
+pm_min_08:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.8
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.7
+        - 0.75
+        - 0.8
+    max_m:
+      type: choice
+      options:
+        - 0.9
+        - 0.95
+
+pm_min_09:
+  fixed:
+    model_data.pretrained_name: citeseer/APPNP/pp_min_0.01_pm_min_0.9
+  grid:
+    min_m:
+      type: choice
+      options:
+        - 0.8
+        - 0.85
+        - 0.9
+    max_m:
+      type: choice
+      options:
+        - 0.95

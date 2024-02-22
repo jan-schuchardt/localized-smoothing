@@ -1,0 +1,69 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+  name: certify_addition_gcn
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 0-05:00     # max time, D-HH:MM
+    partition: gpu_cuda11
+
+fixed:
+  experiment_name: 'certify_addition_gcn'
+  certify_test: False
+  dataset_name: 'cora_ml'
+
+  budget_a: 30
+  budget_d: 30
+  
+  n_clusters: 5
+  batch_size: 50
+  n_samples_eval: 100_0
+  n_samples_pre_eval: 100
+
+  clustering_type: 'metis'
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'GCNLarge'
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+
+grid:
+  min_p: 
+    type: choice
+    options:
+      - 0.001
+      - 0.005
+      - 0.0075
+      - 0.01
+      - 0.02
+      - 0.04
+  max_p:
+    type: choice
+    options:
+      - 0.02
+      - 0.03
+      - 0.04
+      - 0.06
+      - 0.08
+
+pp_min_001_pm_min_055:
+  fixed:
+    min_m: 0.6
+    max_m: 0.6
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.6
+
+pp_min_00125_pm_min_065:
+  fixed:
+    min_m: 0.65
+    max_m: 0.65
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.0125_pm_min_0.65

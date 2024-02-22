@@ -1,0 +1,50 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/train.py
+  conda_environment: localized-smoothing
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/train
+  name: train
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 1-00:00     # max time, D-HH:MM
+    partition: gpu_all
+
+fixed:
+  experiment_name: 'train'
+  certify_test: False
+  dataset_name: 'cora_ml'
+  
+  n_clusters: 1
+  n_samples: 50
+  min_p: 0.01
+  min_m: 0.6
+  max_p: 0.08
+  max_m: 0.9
+
+  training_params:
+    batch_size: 50
+    learning_rate_decay: 1
+    learning_rate: 0.001
+
+  model_data:
+    name: 'GCN'
+    pretrained_name: 'None'
+    model_params:
+      n_hidden: 64
+  
+random:
+  samples: 30
+  training_params.weight_decay:
+    type: uniform
+    min: 0.001
+    max: 0.1
+  model_data.model_params.p_dropout:
+    type: uniform
+    min: 0.3
+    max: 0.8
+    

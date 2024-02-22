@@ -1,0 +1,89 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+  name: certify
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 0-05:00     # max time, D-HH:MM
+    partition: gpu_cuda11
+
+fixed:
+  experiment_name: 'certify'
+  certify_test: False
+  dataset_name: 'cora_ml'
+
+  budget_a: 30
+  budget_d: 30
+  
+  n_clusters: 14
+  batch_size: 50
+  n_samples_eval: 100_0
+  n_samples_pre_eval: 100
+
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'APPNP'
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+      k_hops: 10
+      alpha: 0.15
+
+grid:
+  max_p: 
+    type: choice
+    options: 
+      - 0.02
+      - 0.04
+      - 0.08
+  max_m:
+    type: choice
+    options:
+      - 0.7
+      - 0.8
+      - 0.9
+
+pp_min_001_pm_min_055:
+  fixed:
+    min_p: 0.01
+    min_m: 0.55
+    model_data.pretrained_name: cora_ml/APPNP/pp_min_0.01_pm_min_0.55
+
+pp_min_00125_pm_min_055:
+  fixed:
+    min_p: 0.0125
+    min_m: 0.55
+    model_data.pretrained_name: cora_ml/APPNP/pp_min_0.0125_pm_min_0.55
+
+pp_min_00125_pm_min_06:
+  fixed:
+      min_p: 0.0125
+      min_m: 0.6
+      model_data.pretrained_name: cora_ml/APPNP/pp_min_0.0125_pm_min_0.6
+
+pp_min_0015_pm_min_06:
+  fixed:
+      min_p: 0.015
+      min_m: 0.6
+      model_data.pretrained_name: cora_ml/APPNP/pp_min_0.015_pm_min_0.6
+
+pp_min_00125_pm_min_065:
+  fixed:
+    min_p: 0.0125
+    min_m: 0.65
+    model_data.pretrained_name: cora_ml/APPNP/pp_min_0.0125_pm_min_0.65
+
+pp_min_00075_pm_min_07:
+  fixed:
+    min_p: 0.0075
+    min_m: 0.7
+    model_data.pretrained_name: cora_ml/APPNP/pp_min_0.0075_pm_min_0.7

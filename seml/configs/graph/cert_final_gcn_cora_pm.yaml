@@ -1,0 +1,153 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing-cuda11
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 10-00:00     # max time, D-HH:MM
+    partition: gpu_all
+
+fixed:
+  experiment_name: 'certify'
+  certify_test: False
+  dataset_name: 'cora_ml'
+
+  budget_a: 50
+  budget_d: 50
+  
+  batch_size: 50
+  n_samples_eval: 100_000
+  n_samples_pre_eval: 1000
+
+  clustering_type: 'metis'
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'GCNLarge'
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+
+  min_p: 0.01
+  max_p: 0.01
+
+grid:
+  n_clusters: 
+    type: choice
+    options: 
+      - 5
+
+pm_min_01:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.1
+    min_m: 0.05
+    max_m: 0.95
+
+pm_min_015:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.15
+    min_m: 0.1
+    max_m: 0.95
+
+pm_min_02:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.2
+    min_m: 0.15
+    max_m: 0.95
+
+pm_min_025:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.25
+    min_m: 0.2
+    max_m: 0.95
+
+pm_min_03:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.3
+    min_m: 0.25
+    max_m: 0.95
+
+pm_min_035:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.35
+    min_m: 0.3
+    max_m: 0.95
+
+pm_min_04:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.4
+    min_m: 0.35
+    max_m: 0.95
+
+pm_min_045:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.45
+    min_m: 0.4
+    max_m: 0.95
+
+pm_min_05:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.5
+    min_m: 0.45
+    max_m: 0.95
+
+pm_min_055:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.55
+    min_m: 0.5
+    max_m: 0.95
+
+pm_min_06:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.6
+    min_m: 0.55
+    max_m: 0.95
+
+pm_min_065:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.65
+    min_m: 0.6
+    max_m: 0.95
+
+pm_min_07:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.7
+    min_m: 0.65
+    max_m: 0.95
+
+pm_min_075:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.75
+    min_m: 0.7
+    max_m: 0.95
+
+pm_min_08:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.8
+    min_m: 0.75
+    max_m: 0.95
+
+pm_min_085:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.85
+    min_m: 0.8
+    max_m: 0.95
+
+pm_min_09:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.9
+    min_m: 0.85
+    max_m: 0.95
+
+pm_min_095:
+  fixed:
+    model_data.pretrained_name: cora_ml/GCNLarge/pp_min_0.01_pm_min_0.95
+    min_m: 0.9
+    max_m: 0.99

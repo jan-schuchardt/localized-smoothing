@@ -1,0 +1,46 @@
+seml:
+  executable: /nfs/homedirs/wollschl/staff/localized_smoothing/seml/scripts/graph/cert.py
+  conda_environment: localized-smoothing
+  project_root_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/
+  output_dir: /nfs/homedirs/wollschl/staff/localized_smoothing/experiments/slurm_out/cert
+  name: certify
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1       # num GPUs
+    mem: 32G          # memory
+    cpus-per-task: 6  # num cores
+    time: 0-05:00     # max time, D-HH:MM
+    partition: gpu_cuda11
+
+fixed:
+  experiment_name: 'certify'
+  certify_test: False
+  dataset_name: 'cora_ml'
+
+  budget_a: 30
+  budget_d: 30
+  
+  n_clusters: 10
+  batch_size: 50
+  n_samples_eval: 100_0
+  n_samples_pre_eval: 100
+
+  clustering_type: 'metis'
+  cluster_args:
+    affinity: 'nearest_neighbors'
+
+  model_data:
+    name: 'APPNP'
+    pretrained_name: cora_ml/APPNP/pp_min_0.005_pm_min_0.55
+    model_params:
+      n_hidden: 64
+      p_dropout: 0.5
+      k_hops: 10
+      alpha: 0.15
+  
+  min_p: 0.005
+  min_m: 0.55
+  max_p: 0.02
+  max_m: 0.8   

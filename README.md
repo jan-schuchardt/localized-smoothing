@@ -1,7 +1,7 @@
 # Localized Randomized Smoothing for Collective Robustness Certification
 
 <p align="left">
-<img src="https://www.cs.cit.tum.de/fileadmin/_processed_/f/4/csm_localized_randomized_smoothing_bce645f525.png", width="50%">
+<img src="https://www.cs.cit.tum.de/fileadmin/_processed_/f/4/csm_localized_randomized_smoothing_bce645f525.png", width="100%">
 
 This is the official reference implementation of 
 

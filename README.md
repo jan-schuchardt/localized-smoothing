@@ -11,8 +11,8 @@ Jan Schuchardt*, Tom Wollschläger*, Aleksandar Bojchevski, and Stephan Günnema
 ## Requirements
 To install the requirements, execute
 ```
-conda env create -f requirements.yaml
-conda env create -f requirements.yaml
+conda env create -f image_environment.yaml
+conda env create -f graph_environment.yaml
 ```
 This will create two separate conda environments (`localized_smoothing_images` and `localized_smoothing_graphs`).
 
